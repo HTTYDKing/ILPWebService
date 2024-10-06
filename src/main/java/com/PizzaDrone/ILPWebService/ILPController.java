@@ -1,5 +1,6 @@
 package com.PizzaDrone.ILPWebService;
 
+import com.PizzaDrone.ILPWebService.dataType.LngLatAng;
 import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class ILPController {
     @PostMapping("/distanceTo")
     public ResponseEntity<Object> getDistanceTo(@RequestBody LngLatPair coordinates) {
 
-
+        //Currently a place holder add the proper conditional comparison as required
         if (coordinates == null) {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
@@ -29,6 +30,20 @@ public class ILPController {
 
 
         return new ResponseEntity<Object>(Distance.getDistance(), HttpStatus.OK);
+    }
+
+    @PostMapping("/isCloseTo")
+    public ResponseEntity<Object> getIsCloseTo(@RequestBody LngLatPair coordinates) {
+
+        PosDistance Distance = new PosDistance(coordinates);
+        boolean close = Distance.getDistance() < 0.00015;
+
+        return new ResponseEntity<Object>(close,HttpStatus.OK);
+    }
+
+    @PostMapping("/nextPosition")
+    public ResponseEntity<Object> getNextPosition(@RequestBody LngLatAng point) {
+
     }
 }
 
