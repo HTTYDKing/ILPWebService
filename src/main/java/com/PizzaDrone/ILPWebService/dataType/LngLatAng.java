@@ -12,7 +12,13 @@ public class LngLatAng {
     public Positions getPos() {
         return position;
     }
-    public double angle() {
+    public double getAngle() {
         return angle;
+    }
+    public void setPos(Positions position) {
+        this.position = position;
+    }
+    public void setAngle(double angle) {
+        this.angle = angle;
     }
 }

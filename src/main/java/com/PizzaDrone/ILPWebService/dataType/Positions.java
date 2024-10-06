@@ -16,5 +16,12 @@ public class Positions {
         return latitude;
     }
 
+    public void setLng(double lng) {
+        this.longitude = lng;
+    }
+
+    public void setLat(double lat) {
+        this.latitude = lat;
+    }
 
 }

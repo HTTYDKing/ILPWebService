@@ -43,7 +43,9 @@ public class ILPController {
 
     @PostMapping("/nextPosition")
     public ResponseEntity<Object> getNextPosition(@RequestBody LngLatAng point) {
+        NextPosition NextPosition = new NextPosition(point);
 
+        return ResponseEntity.status(HttpStatus.OK).body(NextPosition.getNextposition());
     }
 }
 
