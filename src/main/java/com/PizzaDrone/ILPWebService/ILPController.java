@@ -1,0 +1,34 @@
+package com.PizzaDrone.ILPWebService;
+
+import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class ILPController {
+
+    @GetMapping("/uuid")
+    public ResponseEntity<Object> getUuid() {
+
+        return new ResponseEntity<Object>("S2335450", HttpStatus.OK);
+    }
+
+    @PostMapping("/distanceTo")
+    public ResponseEntity<Object> getDistanceTo(@RequestBody LngLatPair coordinates) {
+
+
+        if (coordinates == null) {
+            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+        }
+
+        PosDistance Distance = new PosDistance(coordinates);
+
+
+        return new ResponseEntity<Object>(Distance.getDistance(), HttpStatus.OK);
+    }
+}
+
