@@ -7,12 +7,12 @@ import java.awt.*;
 public class RegionRequest {
 
     @JsonProperty("position")
-    private Point point;
+    private Positions point;
 
     @JsonProperty("region")
     private RegionArea region;
 
-    public Point getPoint() {
+    public Positions getPoint() {
         return point;
     }
 

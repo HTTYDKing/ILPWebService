@@ -11,6 +11,8 @@ public class InRegion {
     public InRegion(RegionRequest region) {
         this.region = region;
 
+        Positions point = region.getPoint();
+
         Positions[] verticies = region.getRegion().getVertices();
 
         for (int i = 0; i < (verticies.length - 1); i++) {
@@ -19,9 +21,13 @@ public class InRegion {
 
 
 
-            boolean intersection = ();
-        }
+            boolean intersection = ((yi > point.getLat()) != (yj > point.getLat()))
+                    && (point.getLng() < (xj - xi) * (point.getLat() - yi) / (yj - yi) + xi);
 
+            if (intersection) {
+                inRegion = !inRegion;
+            }
+        }
     }
 
     public boolean isInRegion() {
