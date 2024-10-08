@@ -26,8 +26,9 @@ public class NextPosition {
         double newlat, newlng;
         Positions nextpositions = new Positions();
 
-        newlat = Math.cos(startpos.getAngle())*0.00015 + startpos.getPos().getLat();
-        newlng = Math.sin(startpos.getAngle())*0.00015 + startpos.getPos().getLng();
+        newlat = Math.sin(startpos.getAngle())*0.00015 + startpos.getPos().getLat();
+        newlng = Math.cos(startpos.getAngle())*0.00015 + startpos.getPos().getLng();
+
         nextpositions.setLat(newlat);
         nextpositions.setLng(newlng);
 

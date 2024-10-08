@@ -50,8 +50,9 @@ public class ILPController {
 
     @PostMapping("/isInRegion")
     public ResponseEntity<Object> getIsInRegion(@RequestBody RegionRequest point) {
-        Positions[] vertex = point.getRegion().getVertices();
-        return new ResponseEntity<Object>(vertex,HttpStatus.OK);
+
+
+        return new ResponseEntity<Object>(,HttpStatus.OK);
     }
 }
 
