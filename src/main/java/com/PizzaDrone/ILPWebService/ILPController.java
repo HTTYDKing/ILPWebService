@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.swing.plaf.synth.Region;
+
 
 @RestController
 public class ILPController {
@@ -49,10 +51,11 @@ public class ILPController {
     }
 
     @PostMapping("/isInRegion")
-    public ResponseEntity<Object> getIsInRegion(@RequestBody RegionRequest point) {
+    public ResponseEntity<Object> getIsInRegion(@RequestBody RegionRequest regionRequest) {
 
+        InRegion region = new InRegion(regionRequest);
 
-        return new ResponseEntity<Object>(,HttpStatus.OK);
+        return new ResponseEntity<Object>(region.isInRegion(),HttpStatus.OK);
     }
 }
 
