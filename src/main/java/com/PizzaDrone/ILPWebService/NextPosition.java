@@ -23,8 +23,15 @@ public class NextPosition {
 
         startpos.setAngle(tempangle);
 
-        this.nextposition.setLat(Math.sin(startpos.getAngle())*0.00015 + startpos.getPos().getLat());
-        this.nextposition.setLng(Math.cos(startpos.getAngle())*0.00015 + startpos.getPos().getLng());
+        double newlat, newlng;
+        Positions nextpositions = new Positions();
+
+        newlat = Math.cos(startpos.getAngle())*0.00015 + startpos.getPos().getLat();
+        newlng = Math.sin(startpos.getAngle())*0.00015 + startpos.getPos().getLng();
+        nextpositions.setLat(newlat);
+        nextpositions.setLng(newlng);
+
+        this.nextposition = nextpositions;
 
         this.start = startpos;
     }

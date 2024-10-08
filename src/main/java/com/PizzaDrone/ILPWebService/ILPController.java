@@ -2,6 +2,7 @@ package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.LngLatAng;
 import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
+import com.PizzaDrone.ILPWebService.dataType.RegionArea;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +47,11 @@ public class ILPController {
         NextPosition NextPosition = new NextPosition(point);
 
         return ResponseEntity.status(HttpStatus.OK).body(NextPosition.getNextposition());
+    }
+
+    @PostMapping("/isInRegion")
+    public ResponseEntity<Object> getIsInRegion(@RequestBody RegionArea point) {
+        return new ResponseEntity<Object>(point.getVertices(),HttpStatus.OK);
     }
 }
 
