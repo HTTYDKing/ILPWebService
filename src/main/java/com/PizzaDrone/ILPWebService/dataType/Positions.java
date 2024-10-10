@@ -6,10 +6,10 @@ public class Positions {
     @JsonProperty("lat")
     private double latitude = Double.NaN;
     @JsonProperty("lng")
-    private double longitude;
+    private double longitude = Double.NaN;
 
     public double getLng() {
-        return longitude = Double.NaN;
+        return longitude;
     }
 
     public double getLat() {
@@ -24,7 +24,7 @@ public class Positions {
         this.latitude = lat;
     }
 
-    public boolean isEmpty() {
+    public boolean NotValid() {
         return Double.isNaN(this.longitude) || Double.isNaN(this.latitude);
     }
 

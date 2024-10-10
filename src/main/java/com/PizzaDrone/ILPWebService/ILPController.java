@@ -24,7 +24,7 @@ public class ILPController {
     public ResponseEntity<Object> getDistanceTo(@RequestBody LngLatPair coordinates) {
 
         //Currently checks if any of the variables in the code has not been instantiated
-        if (coordinates.isEmpty()) {
+        if (coordinates.NotValid()) {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 

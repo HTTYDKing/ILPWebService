@@ -26,6 +26,7 @@ public class NextPosition {
         double newlat, newlng;
         Positions nextpositions = new Positions();
 
+        //Check whether it is Radian or Degrees
         newlat = Math.sin(startpos.getAngle())*0.00015 + startpos.getPos().getLat();
         newlng = Math.cos(startpos.getAngle())*0.00015 + startpos.getPos().getLng();
 

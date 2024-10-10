@@ -16,7 +16,7 @@ public class LngLatPair {
         return position2;
     }
 
-    public boolean isEmpty() {
-        return this.position1.isEmpty() || this.position2.isEmpty();
+    public boolean NotValid() {
+        return this.position1.NotValid() || this.position2.NotValid();
     }
 }
