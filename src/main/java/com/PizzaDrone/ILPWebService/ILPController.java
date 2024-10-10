@@ -23,8 +23,8 @@ public class ILPController {
     @PostMapping("/distanceTo")
     public ResponseEntity<Object> getDistanceTo(@RequestBody LngLatPair coordinates) {
 
-        //Currently a place holder add the proper conditional comparison as required
-        if (coordinates == null) {
+        //Currently checks if any of the variables in the code has not been instantiated
+        if (coordinates.isEmpty()) {
             return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
         }
 
