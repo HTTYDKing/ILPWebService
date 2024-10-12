@@ -1,6 +1,8 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,26 +23,45 @@ public class ILPController {
     }
 
     @PostMapping("/distanceTo")
-    public ResponseEntity<Object> getDistanceTo(@RequestBody LngLatPair coordinates) {
+    public ResponseEntity<Object> getDistanceTo(@RequestBody String body) {
 
         //Currently checks if any of the variables in the code has not been instantiated
-        if (coordinates.NotValid()) {
-            return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
+            if (coordinates.NotValid()) {
+                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+            }
+
+            PosDistance Distance = new PosDistance(coordinates);
+
+            return new ResponseEntity<Object>(Distance.getDistance(), HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        PosDistance Distance = new PosDistance(coordinates);
-
-
-        return new ResponseEntity<Object>(Distance.getDistance(), HttpStatus.OK);
     }
 
     @PostMapping("/isCloseTo")
-    public ResponseEntity<Object> getIsCloseTo(@RequestBody LngLatPair coordinates) {
+    public ResponseEntity<Object> getIsCloseTo(@RequestBody String body) {
 
-        PosDistance Distance = new PosDistance(coordinates);
-        boolean close = Distance.getDistance() < 0.00015;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
 
-        return new ResponseEntity<Object>(close,HttpStatus.OK);
+            if (coordinates.NotValid()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+            PosDistance Distance = new PosDistance(coordinates);
+            boolean close = Distance.getDistance() < 0.00015;
+
+            return new ResponseEntity<Object>(close, HttpStatus.OK);
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PostMapping("/nextPosition")
