@@ -21,4 +21,8 @@ public class LngLatAng {
     public void setAngle(double angle) {
         this.angle = angle;
     }
+
+    public boolean NotValid() {
+        return this.position.NotValid() || (this.angle>=360 || this.angle<0);
+    }
 }

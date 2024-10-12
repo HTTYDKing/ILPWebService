@@ -2,7 +2,6 @@ package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.plaf.synth.Region;
 
 
 @RestController
@@ -65,10 +63,25 @@ public class ILPController {
     }
 
     @PostMapping("/nextPosition")
-    public ResponseEntity<Object> getNextPosition(@RequestBody LngLatAng point) {
-        NextPosition NextPosition = new NextPosition(point);
+    public ResponseEntity<Object> getNextPosition(@RequestBody String body) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            LngLatAng point = objectMapper.readValue(body, LngLatAng.class);
 
-        return ResponseEntity.status(HttpStatus.OK).body(NextPosition.getNextposition());
+            if (point.NotValid()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            NextPosition NextPosition = new NextPosition(point);
+
+            return ResponseEntity.status(HttpStatus.OK).body(NextPosition.getNextposition());
+
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 
     @PostMapping("/isInRegion")

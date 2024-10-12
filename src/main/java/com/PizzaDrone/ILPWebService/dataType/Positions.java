@@ -3,10 +3,11 @@ package com.PizzaDrone.ILPWebService.dataType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Positions {
-    @JsonProperty("lat")
-    private double latitude = Double.NaN;
     @JsonProperty("lng")
     private double longitude = Double.NaN;
+    @JsonProperty("lat")
+    private double latitude = Double.NaN;
+
 
     public double getLng() {
         return longitude;
