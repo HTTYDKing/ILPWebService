@@ -1,6 +1,8 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,8 +78,7 @@ public class ILPController {
 
             return ResponseEntity.status(HttpStatus.OK).body(NextPosition.getNextposition());
 
-        }
-        catch (Exception e) {
+        }catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
@@ -85,11 +86,24 @@ public class ILPController {
     }
 
     @PostMapping("/isInRegion")
-    public ResponseEntity<Object> getIsInRegion(@RequestBody RegionRequest regionRequest) {
+    public ResponseEntity<Object> getIsInRegion(@RequestBody String body) {
 
-        InRegion region = new InRegion(regionRequest);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            RegionRequest regionRequest = objectMapper.readValue(body, RegionRequest.class);
 
-        return new ResponseEntity<Object>(region.isInRegion(),HttpStatus.OK);
+            if (regionRequest.NotValid()) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            InRegion region = new InRegion(regionRequest);
+
+            return new ResponseEntity<Object>(region.isInRegion(), HttpStatus.OK);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
     }
 }
 

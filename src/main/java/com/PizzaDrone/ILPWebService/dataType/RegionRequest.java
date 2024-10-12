@@ -19,4 +19,9 @@ public class RegionRequest {
     public RegionArea getRegion() {
         return region;
     }
+
+
+    public boolean NotValid(){
+        return point.NotValid() || region.NotValid();
+    }
 }

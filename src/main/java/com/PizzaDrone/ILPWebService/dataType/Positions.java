@@ -26,9 +26,9 @@ public class Positions {
     }
 
     public boolean NotValid() {
-        boolean inrange = !(this.longitude >= -180 && this.longitude <= 180) && (this.latitude >= -90 && this.latitude <= 90);
+        boolean notinrange = !(this.longitude >= -180 && this.longitude <= 180) && (this.latitude >= -90 && this.latitude <= 90);
 
-        return Double.isNaN(this.longitude) || Double.isNaN(this.latitude) || inrange;
+        return Double.isNaN(this.longitude) || Double.isNaN(this.latitude) || notinrange;
     }
 
 }

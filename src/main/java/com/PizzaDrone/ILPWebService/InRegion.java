@@ -33,4 +33,5 @@ public class InRegion {
     public boolean isInRegion() {
         return inRegion;
     }
+
 }
