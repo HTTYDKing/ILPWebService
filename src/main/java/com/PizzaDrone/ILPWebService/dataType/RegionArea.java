@@ -26,7 +26,8 @@ public class RegionArea {
             }
         }
 
-        if (this.vertices[0] != this.vertices[this.vertices.length - 1]) {
+        if ((this.vertices[0].getLat() != this.vertices[this.vertices.length - 1].getLat())||
+                (this.vertices[0].getLng() != this.vertices[this.vertices.length - 1].getLng())) {
             notenclosed = true;
         }
 

@@ -15,6 +15,7 @@ public class InRegion {
 
         Positions[] verticies = region.getRegion().getVertices();
 
+
         for (int i = 0; i < (verticies.length - 1); i++) {
             double xi = verticies[i].getLng(), yi = verticies[i].getLat();
             double xj = verticies[i + 1].getLng(), yj = verticies[i + 1].getLat();
@@ -26,6 +27,13 @@ public class InRegion {
 
             if (intersection) {
                 inRegion = !inRegion;
+            }
+        }
+
+        for (Positions value : this.region.getRegion().getVertices()) {
+            if ((value.getLat() == point.getLat())&&(value.getLng() == point.getLng())) {
+                this.inRegion = true;
+                break;
             }
         }
     }
