@@ -30,6 +30,7 @@ public class ILPController {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
+
             if (coordinates.NotValid()) {
                 return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
             }

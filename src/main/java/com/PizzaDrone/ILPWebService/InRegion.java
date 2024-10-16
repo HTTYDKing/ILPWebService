@@ -13,12 +13,12 @@ public class InRegion {
 
         Positions point = region.getPoint();
 
-        Positions[] verticies = region.getRegion().getVertices();
+        Positions[] vertices = region.getRegion().getVertices();
 
 
-        for (int i = 0; i < (verticies.length - 1); i++) {
-            double xi = verticies[i].getLng(), yi = verticies[i].getLat();
-            double xj = verticies[i + 1].getLng(), yj = verticies[i + 1].getLat();
+        for (int i = 0; i < (vertices.length - 1); i++) {
+            double xi = vertices[i].getLng(), yi = vertices[i].getLat();
+            double xj = vertices[i + 1].getLng(), yj = vertices[i + 1].getLat();
 
 
 
@@ -36,6 +36,21 @@ public class InRegion {
                 break;
             }
         }
+
+        for (int i = 0; i < (vertices.length - 1); i++) {
+            double x0 = (point.getLat() - vertices[i].getLat()), y0 = (point.getLng() - vertices[i].getLng());
+            double x1 = (point.getLat()- vertices[i + 1].getLat()), y1 = (point.getLng() - vertices[i + 1].getLng());
+
+            double crossProduct = x0 * y1 - x1 * y0;
+
+            if (Math.abs(crossProduct) <= 1e-9) {
+                this.inRegion = true;
+                break;
+            }
+
+        }
+
+
     }
 
     public boolean isInRegion() {
