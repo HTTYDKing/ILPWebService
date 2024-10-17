@@ -1,7 +1,9 @@
 package com.PizzaDrone.ILPWebService.dataType;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({ "lng", "lat" })
 public class Positions {
     @JsonProperty("lng")
     private double longitude = Double.NaN;

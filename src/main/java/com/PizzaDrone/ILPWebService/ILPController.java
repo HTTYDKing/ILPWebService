@@ -1,8 +1,6 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,7 @@ public class ILPController {
     @GetMapping("/uuid")
     public ResponseEntity<Object> getUuid() {
 
-        return new ResponseEntity<Object>("S2335450", HttpStatus.OK);
+        return new ResponseEntity<>("S2335450", HttpStatus.OK);
     }
 
     @PostMapping("/distanceTo")
@@ -32,12 +30,12 @@ public class ILPController {
             LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
 
             if (coordinates.NotValid()) {
-                return new ResponseEntity<Object>(HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
             PosDistance Distance = new PosDistance(coordinates);
 
-            return new ResponseEntity<Object>(Distance.getDistance(), HttpStatus.OK);
+            return new ResponseEntity<>(Distance.getDistance(), HttpStatus.OK);
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -58,7 +56,7 @@ public class ILPController {
             PosDistance Distance = new PosDistance(coordinates);
             boolean close = Distance.getDistance() < 0.00015;
 
-            return new ResponseEntity<Object>(close, HttpStatus.OK);
+            return new ResponseEntity<>(close, HttpStatus.OK);
         }
         catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -99,7 +97,7 @@ public class ILPController {
 
             InRegion region = new InRegion(regionRequest);
 
-            return new ResponseEntity<Object>(region.isInRegion(), HttpStatus.OK);
+            return new ResponseEntity<>(region.isInRegion(), HttpStatus.OK);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
