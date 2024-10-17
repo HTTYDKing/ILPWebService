@@ -23,6 +23,6 @@ public class LngLatAng {
     }
 
     public boolean NotValid() {
-        return this.position.NotValid() || (this.angle>=360 || this.angle<0);
+        return this.position.NotValid() || (this.angle>360 || this.angle<0);
     }
 }
