@@ -22,8 +22,6 @@ public class ILPController {
     @PostMapping("/distanceTo")
     public ResponseEntity<Object> getDistanceTo(@RequestBody String body) {
 
-        //Currently checks if any of the variables in the code has not been instantiated
-
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
