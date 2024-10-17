@@ -19,7 +19,6 @@ public class ILPController {
 
         return new ResponseEntity<>("S2335450", HttpStatus.OK);
     }
-
     @PostMapping("/distanceTo")
     public ResponseEntity<Object> getDistanceTo(@RequestBody String body) {
 
