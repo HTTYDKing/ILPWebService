@@ -16,8 +16,15 @@ public class RegionRequest {
         return point;
     }
 
+    public void setPoint(Positions point) {
+        this.point = point;
+    }
+
     public RegionArea getRegion() {
         return region;
+    }
+    public void setRegion(RegionArea region) {
+        this.region = region;
     }
 
 

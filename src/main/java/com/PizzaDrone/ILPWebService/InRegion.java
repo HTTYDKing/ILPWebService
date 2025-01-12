@@ -13,14 +13,18 @@ public class InRegion {
 
         Positions point = region.getPoint();
 
-        Positions[] vertices = region.getRegion().getVertices();
+        CalculateInRegion(point);
 
+
+    }
+
+    public void CalculateInRegion(Positions point) {
+
+        Positions[] vertices = region.getRegion().getVertices();
 
         for (int i = 0; i < (vertices.length - 1); i++) {
             double xi = vertices[i].getLng(), yi = vertices[i].getLat();
             double xj = vertices[i + 1].getLng(), yj = vertices[i + 1].getLat();
-
-
 
             boolean intersection = ((yi > point.getLat()) != (yj > point.getLat()))
                     && (point.getLng() < (xj - xi) * (point.getLat() - yi) / (yj - yi) + xi);
@@ -49,12 +53,6 @@ public class InRegion {
             }
 
         }
-
-
-    }
-
-    public void CalculateInRegion() {
-
     }
 
     public boolean isInRegion() {
