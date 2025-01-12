@@ -53,6 +53,10 @@ public class InRegion {
 
     }
 
+    public void CalculateInRegion() {
+
+    }
+
     public boolean isInRegion() {
         return inRegion;
     }

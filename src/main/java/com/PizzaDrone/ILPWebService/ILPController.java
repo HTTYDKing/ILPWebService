@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 
 
 @RestController
@@ -100,6 +102,40 @@ public class ILPController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping("/validateOrder")
+    public ResponseEntity<Object> getValidateOrder(@RequestBody PizzaOrder body) {
+
+        ValidateOrder validateOrder = new ValidateOrder(body);
+
+        OrderValidation OrderValidation = new OrderValidation(validateOrder.getStatus(),validateOrder.getCode());
+        return new ResponseEntity<>(OrderValidation, HttpStatus.OK);
+    }
+
+    @PostMapping("/calcDeliveryPath")
+    public ResponseEntity<Object> getCalcDeliveryPath(@RequestBody PizzaOrder body) {
+
+        ValidateOrder validateOrder = new ValidateOrder(body);
+
+        if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getOrder(),validateOrder.getResturantorder());
+
+        return null;
+    }
+
+    @PostMapping("/calcDeliveryPathAsGeoJson")
+    public ResponseEntity<Object> getCalcDeliveryPathAsGeoJson(@RequestBody PizzaOrder body) {
+        ValidateOrder validateOrder = new ValidateOrder(body);
+
+        if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getOrder(),validateOrder.getResturantorder());
+
+        return null;
     }
 }
 
