@@ -3,6 +3,8 @@ package com.PizzaDrone.ILPWebService.dataType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.Objects;
+
 @JsonPropertyOrder({ "lng", "lat" })
 public class Positions {
     @JsonProperty("lng")
@@ -33,4 +35,24 @@ public class Positions {
         return Double.isNaN(this.longitude) || Double.isNaN(this.latitude) || notinrange;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Positions positions = (Positions) o;
+        return Double.compare(positions.latitude,latitude) == 0 && Double.compare(positions.longitude,longitude) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude);
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
 }

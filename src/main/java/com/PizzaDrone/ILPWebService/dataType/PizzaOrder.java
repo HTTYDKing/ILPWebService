@@ -33,9 +33,11 @@ public class PizzaOrder {
     public double getPriceTotalInPence(){
         return PriceTotal;
     }
+
     public PizzaDetails[] getPizzasInOrder(){
         return Pizzas;
     }
+
     public CardInfo getCreditCardInformation(){
         return CreditCard;
     }

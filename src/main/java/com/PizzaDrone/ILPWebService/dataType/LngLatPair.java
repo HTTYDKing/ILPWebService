@@ -15,6 +15,12 @@ public class LngLatPair {
     public Positions getPos2() {
         return position2;
     }
+    public void setPos1(Positions position1) {
+        this.position1 = position1;
+    }
+    public void setPos2(Positions position2) {
+        this.position2 = position2;
+    }
 
     public boolean NotValid() {
         return this.position1.NotValid() || this.position2.NotValid();
