@@ -1,14 +1,11 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.PizzaOrder;
-import com.PizzaDrone.ILPWebService.dataType.Positions;
-import com.PizzaDrone.ILPWebService.dataType.RegionArea;
-import com.PizzaDrone.ILPWebService.dataType.RegionRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class CalDeliveryPathTest {
     String Json = "{\n" +
@@ -33,35 +30,31 @@ public class CalDeliveryPathTest {
             "  }";
     @Test
     void TestPath() {
-
         try {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
             ValidateOrder validateOrder = new ValidateOrder(regionRequest);
-            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getOrder(), validateOrder.getResturantorder());
-//            Positions[] path = DronePathtest.getFlightPath();
-            System.out.println(DronePathtest.toGeoJson());
+            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getResturantorder());
+            assertThat(DronePathtest).isNotNull();
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
     }
-
     @Test
-    void TestHeuristic() {
+    void TestPathGeoJson() {
         try {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
             ValidateOrder validateOrder = new ValidateOrder(regionRequest);
-            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getOrder(), validateOrder.getResturantorder());
-            DronePathtest.heuristictoAppleton(validateOrder.getResturantorder().getLocation());
-//            System.out.println(DronePathtest.toGeoJson());
+            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getResturantorder());
+            assertThat(DronePathtest.toGeoJson()).isNotNull();
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-    }
 
+    }
 
 }

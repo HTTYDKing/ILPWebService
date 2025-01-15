@@ -11,10 +11,11 @@ public class PosDistance {
     public PosDistance(LngLatPair Points) {
         this.position1 = Points.getPos1();
         this.position2 = Points.getPos2();
-
+        //Calculates distance my using Math
         this.distance = Math.sqrt((Math.pow((position1.getLat()-position2.getLat()), 2)+Math.pow((position1.getLng()-position2.getLng()), 2)));
     }
 
+    //Returns the distance value stored
     public double getDistance() {
         return distance;
     }

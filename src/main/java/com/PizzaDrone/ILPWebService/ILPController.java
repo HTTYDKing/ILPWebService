@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 
 
 @RestController
@@ -23,15 +21,16 @@ public class ILPController {
     }
     @PostMapping("/distanceTo")
     public ResponseEntity<Object> getDistanceTo(@RequestBody String body) {
-
+        //Uses try for instances where the Json input does not match the data type
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
 
+            // Checks if the data Type is Valid
             if (coordinates.NotValid()) {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-
+            // Creates a class and uses it to get the distance
             PosDistance Distance = new PosDistance(coordinates);
 
             return new ResponseEntity<>(Distance.getDistance(), HttpStatus.OK);
@@ -44,7 +43,7 @@ public class ILPController {
 
     @PostMapping("/isCloseTo")
     public ResponseEntity<Object> getIsCloseTo(@RequestBody String body) {
-
+        // Runs the same program as distanceto but does a comparison to check if it is close
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LngLatPair coordinates = objectMapper.readValue(body, LngLatPair.class);
@@ -64,6 +63,7 @@ public class ILPController {
 
     @PostMapping("/nextPosition")
     public ResponseEntity<Object> getNextPosition(@RequestBody String body) {
+        // Similar process as before with making Object and checking if it was properly received
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             LngLatAng point = objectMapper.readValue(body, LngLatAng.class);
@@ -106,12 +106,13 @@ public class ILPController {
 
     @PostMapping("/validateOrder")
     public ResponseEntity<Object> getValidateOrder(@RequestBody PizzaOrder body) {
-
+        //No try function as it will need to ignore any data that is ont required
         ValidateOrder validateOrder = new ValidateOrder(body);
 
         OrderValidation OrderValidation = new OrderValidation(validateOrder.getStatus(),validateOrder.getCode());
         return new ResponseEntity<>(OrderValidation, HttpStatus.OK);
     }
+
 
     @PostMapping("/calcDeliveryPath")
     public ResponseEntity<Object> getCalcDeliveryPath(@RequestBody PizzaOrder body) {
@@ -121,9 +122,9 @@ public class ILPController {
         if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getOrder(),validateOrder.getResturantorder());
+        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getResturantorder());
 
-        return null;
+        return new ResponseEntity<>(DronePath.getFlightPath(), HttpStatus.OK);
     }
 
     @PostMapping("/calcDeliveryPathAsGeoJson")
@@ -133,10 +134,9 @@ public class ILPController {
         if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getOrder(),validateOrder.getResturantorder());
+        CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getResturantorder());
 
-
-        return new ResponseEntity<>(DronePath, HttpStatus.OK);
+        return new ResponseEntity<>(DronePath.toGeoJson(), HttpStatus.OK);
     }
 }
 

@@ -4,6 +4,7 @@ import com.PizzaDrone.ILPWebService.dataType.LngLatAng;
 import com.PizzaDrone.ILPWebService.dataType.Positions;
 
 public class NextPosition {
+
     private LngLatAng start;
     private Positions nextposition;
 
@@ -12,7 +13,7 @@ public class NextPosition {
         double newlat, newlng;
         Positions nextpositions = new Positions();
 
-
+        //Uses Math to calculate the values of the next positions
         newlat = Math.sin(Math.toRadians(startpos.getAngle()))*0.00015 + startpos.getPos().getLat();
         newlng = Math.cos(Math.toRadians(startpos.getAngle()))*0.00015 + startpos.getPos().getLng();
 
@@ -25,10 +26,7 @@ public class NextPosition {
         this.start = startpos;
     }
 
-    public LngLatAng getStart() {
-        return start;
-    }
-
+    // Returns the Next position
     public Positions getNextposition() {
         return nextposition;
     }

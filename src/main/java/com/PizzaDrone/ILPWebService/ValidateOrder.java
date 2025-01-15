@@ -16,7 +16,7 @@ public class ValidateOrder {
     public ValidateOrder(PizzaOrder order) {
         this.order = order;
         Date ActualExpiraryDate = new Date();
-
+        //Attempts to format the Date for the Expiration date
         try {
             // Call the method that throws ParseException
             ActualExpiraryDate = order.getCreditCardInformation().getExpireDate();
@@ -25,7 +25,7 @@ public class ValidateOrder {
             this.code = OrderValidationCode.EXPIRY_DATE_INVALID;
         }
 
-
+        //Gets what the total price should be to compare to
         PizzaDetails[] Pizzas = order.getPizzasInOrder();
         double TotalPrice = 100;
 
@@ -33,10 +33,11 @@ public class ValidateOrder {
             TotalPrice += Pizza.getPizzaPrice();
         }
 
+        //Loads the restaurant information from the website
         String url = "https://ilp-rest-2024.azurewebsites.net/restaurants";
         Resturant[] restaurantArray = restTemplate.getForObject(url, Resturant[].class);
 
-
+        //Gets a list of all the Pizzas to check if the Pizza in the order exists
         List<String> allRestaurantPizzas = new ArrayList<>();
 
         assert restaurantArray != null;
@@ -50,7 +51,7 @@ public class ValidateOrder {
         for (PizzaDetails Pizza : Pizzas) {
             PizzaorderList.add(Pizza.getPizzaName());
         }
-
+        //Checks if there are Pizzas from multiple restaurants
         boolean PizzaFromMultipleRestaurant = false;
         char Restaurantnum = Pizzas[0].getPizzaName().charAt(1);
         for (PizzaDetails Pizza : Pizzas) {
@@ -60,10 +61,10 @@ public class ValidateOrder {
             }
         }
         this.resturantorder = restaurantArray[Integer.parseInt(String.valueOf(Restaurantnum)) - 1];
-
+        //Gets all the Restaurant open days
         List<String> RestuantOpeningDays = new ArrayList<>(
                 Arrays.asList(restaurantArray[Integer.parseInt(String.valueOf(Restaurantnum)) - 1].openingDates()));
-
+        //Gets the day to compare the Dates
         String orderDay = switch (order.getOrderDate().getDay()) {
             case 0 -> "SUNDAY";
             case 1 -> "MONDAY";
@@ -75,6 +76,7 @@ public class ValidateOrder {
             default -> "INVALID DAY";
         };
 
+        //Checking that the prices of Pizzas are the same
         List<Double> allRestaurantPizzasPrice = new ArrayList<>();
 
         for (Resturant restaurant : restaurantArray) {
@@ -83,22 +85,26 @@ public class ValidateOrder {
             }
         }
 
+        //Performing the checks and if they are correct
         boolean PriceforPizzaInvalid = false;
         for (PizzaDetails pizza : order.getPizzasInOrder()) {
             int index = allRestaurantPizzas.indexOf(pizza.getPizzaName());
-            if (pizza.getPizzaPrice() != allRestaurantPizzasPrice.get(index)) {
+            if (index == -1) {
+                break;
+            }
+            else if (pizza.getPizzaPrice() != allRestaurantPizzasPrice.get(index)) {
                 PriceforPizzaInvalid = true;
                 break;
             }
         }
 
 
-        //Do UNDEFINED check
+        //Preforming all the checks
         if (order.getCreditCardInformation().getCardNumber().length() != 16){
             this.status = OrderStatus.INVALID;
             this.code = OrderValidationCode.CARD_NUMBER_INVALID;
         }
-        else if ( order.getOrderDate().after(ActualExpiraryDate)){
+        else if (order.getOrderDate().after(ActualExpiraryDate)){
             this.status = OrderStatus.INVALID;
             this.code = OrderValidationCode.EXPIRY_DATE_INVALID;
         }
