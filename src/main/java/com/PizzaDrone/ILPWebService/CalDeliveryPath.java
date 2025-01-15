@@ -2,6 +2,9 @@ package com.PizzaDrone.ILPWebService;
 
 
 import com.PizzaDrone.ILPWebService.dataType.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
@@ -9,57 +12,39 @@ import java.util.*;
 public class CalDeliveryPath {
 
     private RegionArea[] Noflyzone;
-    private List<InRegion> NoflyzoneInRegion = new ArrayList<InRegion>();
-    private RegionArea Central;
-    private InRegion CentralInRegion;
     private Positions[] FlightPath;
     private final RestTemplate restTemplate = new RestTemplate();
+    private final Positions Appleton = new Positions();
 
     public CalDeliveryPath(PizzaOrder order, Resturant resturantorder) {
+
+        Appleton.setLng(-3.186874);
+        Appleton.setLat(55.944494);
 
         String urlNoflyZone = "https://ilp-rest-2024.azurewebsites.net/noFlyZones";
         this.Noflyzone = restTemplate.getForObject(urlNoflyZone, RegionArea[].class);
 
-        String urlCentral = "https://ilp-rest-2024.azurewebsites.net/centralArea";
-        this.Central = restTemplate.getForObject(urlCentral, RegionArea.class);
-
-        for (RegionArea area : Noflyzone) {
-            RegionRequest regionRequest = new RegionRequest();
-            regionRequest.setRegion(area);
-            regionRequest.setPoint(resturantorder.getLocation());
-
-            InRegion inRegion = new InRegion(regionRequest);
-            this.NoflyzoneInRegion.add(inRegion);
-        }
-
-        RegionRequest regionRequest = new RegionRequest();
-        regionRequest.setRegion(this.Central);
-        regionRequest.setPoint(resturantorder.getLocation());
-
-        InRegion inRegion = new InRegion(regionRequest);
-        this.CentralInRegion = inRegion;
-
-
-
         this.FlightPath = findPath(resturantorder.getLocation());
-
     }
+
 
     public Positions[] findPath(Positions start){
         PriorityQueue<Node> openPath = new PriorityQueue<>(Comparator.comparingDouble(n -> n.fscore));
         Map<Positions, Node> allNodes = new HashMap<>();
 
-        Node startNode = new Node(start, null, 0,heuristictoCentral(start));
+        Node startNode = new Node(start, null, 0,heuristictoAppleton(start));
+        openPath.add(startNode);
+        allNodes.put(start,startNode);
+
 
         while(!openPath.isEmpty()){
             Node currentNode = openPath.poll();
 
-            this.CentralInRegion.CalculateInRegion(currentNode.position);
-            if(this.CentralInRegion.isInRegion()){
+            if(heuristictoAppleton(currentNode.position)<0.00015){
                 return remakePath(currentNode);
-                }
+            }
 
-            for (int angle = 0; angle < 360 ; angle+=90){
+            for (double angle = 0; angle < 360 ; angle+=22.5){
                 LngLatAng nextpos = new LngLatAng();
                 nextpos.setAngle(angle);
                 nextpos.setPos(currentNode.position);
@@ -79,7 +64,7 @@ public class CalDeliveryPath {
                 if(Tempgscore < neighbournode.gscore){
                     neighbournode.parent = currentNode;
                     neighbournode.gscore = Tempgscore;
-                    neighbournode.fscore = Tempgscore + heuristictoCentral(neighbourpos.getNextposition());
+                    neighbournode.fscore = Tempgscore + heuristictoAppleton(neighbourpos.getNextposition());
                     allNodes.put(neighbourpos.getNextposition(), neighbournode);
 
                     if(!openPath.contains(neighbournode)){
@@ -89,15 +74,15 @@ public class CalDeliveryPath {
             }
 
         }
-
         return null;
     }
 
-
     public boolean isinRestrictedRegion(Positions positions){
-        for (InRegion inRegion : NoflyzoneInRegion ) {
-            inRegion.CalculateInRegion(positions);
-            boolean TempVar = inRegion.isInRegion();
+
+        InRegion region = new InRegion();
+
+        for (RegionArea Region : this.Noflyzone) {
+            boolean TempVar = region.CalculateInRegion(Region.getVertices(), positions);
             if (TempVar) {
                 return true;
             }
@@ -105,23 +90,9 @@ public class CalDeliveryPath {
         return false;
     }
 
-    public double heuristictoCentral(Positions positions){
-        double mindistance = Double.MAX_VALUE;
+    public double heuristictoAppleton(Positions positions){
 
-        LngLatPair Distance = new LngLatPair();
-
-        Distance.setPos1(positions);
-
-        for(Positions vertex : this.Central.getVertices()){
-            Distance.setPos2(vertex);
-            PosDistance posDistance = new PosDistance(Distance);
-
-            if (posDistance.getDistance() < mindistance){
-                mindistance = posDistance.getDistance();
-            }
-        }
-
-        return mindistance;
+        return Math.sqrt((Math.pow((positions.getLat()- this.Appleton.getLat()), 2)+Math.pow((positions.getLng()- this.Appleton.getLng()), 2)));
     }
 
     public Positions[] remakePath (Node start){
@@ -138,5 +109,48 @@ public class CalDeliveryPath {
         return this.FlightPath;
     }
 
+    public String toGeoJson(){
+
+        String GeoJsonString = "";
+        if (this.FlightPath == null){
+            return GeoJsonString;
+        }
+        ObjectMapper GeoJsonmapper = new ObjectMapper();
+
+        ObjectNode GeoJson = GeoJsonmapper.createObjectNode();
+        GeoJson.put("type", "FeatureCollection");
+
+        ArrayNode features = GeoJsonmapper.createArrayNode();
+        ObjectNode feature = GeoJsonmapper.createObjectNode();
+        feature.put("type", "Feature");
+
+        ObjectNode geometry = GeoJsonmapper.createObjectNode();
+        geometry.put("type", "LineString");
+        ObjectNode properties = GeoJsonmapper.createObjectNode();
+        ArrayNode coordinates = GeoJsonmapper.createArrayNode();
+        for(Positions point : this.FlightPath){
+            ArrayNode pos = GeoJsonmapper.createArrayNode();
+            pos.add(point.getLng());
+            pos.add(point.getLat());
+            coordinates.add(pos);
+        }
+
+        geometry.set("coordinates", coordinates);
+        feature.set("properties",properties);
+        feature.set("geometry", geometry);
+
+        features.add(feature);
+
+
+        GeoJson.set("features", features);
+        try {
+            GeoJsonString = GeoJsonmapper.writerWithDefaultPrettyPrinter().writeValueAsString(GeoJson);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return GeoJsonString;
+    }
 }
 

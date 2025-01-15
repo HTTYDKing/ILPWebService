@@ -11,16 +11,21 @@ public class InRegion {
     public InRegion(RegionRequest region) {
         this.region = region;
 
-        Positions point = region.getPoint();
+        Positions regionpoint = region.getPoint();
+        Positions[] regionvertices = region.getRegion().getVertices();
 
-        CalculateInRegion(point);
+        CalculateInRegion(regionvertices,regionpoint);
 
 
     }
 
-    public void CalculateInRegion(Positions point) {
+    public InRegion() {
 
-        Positions[] vertices = region.getRegion().getVertices();
+    }
+
+    public boolean CalculateInRegion(Positions[] vertices,Positions point) {
+
+
 
         for (int i = 0; i < (vertices.length - 1); i++) {
             double xi = vertices[i].getLng(), yi = vertices[i].getLat();
@@ -34,10 +39,11 @@ public class InRegion {
             }
         }
 
-        for (Positions value : this.region.getRegion().getVertices()) {
+        for (Positions value : vertices) {
             if ((value.getLat() == point.getLat())&&(value.getLng() == point.getLng())) {
                 this.inRegion = true;
-                break;
+                return true;
+
             }
         }
 
@@ -49,10 +55,11 @@ public class InRegion {
 
             if (Math.abs(crossProduct) <= 1e-9) {
                 this.inRegion = true;
-                break;
+                return true;
             }
 
         }
+        return this.inRegion;
     }
 
     public boolean isInRegion() {
