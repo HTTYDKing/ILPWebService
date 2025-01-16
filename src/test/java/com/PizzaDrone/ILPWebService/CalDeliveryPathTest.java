@@ -1,6 +1,8 @@
 package com.PizzaDrone.ILPWebService;
 
+import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
 import com.PizzaDrone.ILPWebService.dataType.PizzaOrder;
+import com.PizzaDrone.ILPWebService.dataType.Positions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,15 @@ public class CalDeliveryPathTest {
             ValidateOrder validateOrder = new ValidateOrder(regionRequest);
             CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getResturantorder());
             assertThat(DronePathtest).isNotNull();
+            LngLatPair Points = new LngLatPair();
+            Positions Appleton = new Positions();
+            Appleton.setLng(-3.186874);
+            Appleton.setLat(55.944494);
+
+            Points.setPos1(Appleton);
+            Points.setPos2(DronePathtest.getFlightPath()[DronePathtest.getFlightPath().length - 1]);
+            PosDistance distance = new PosDistance(Points);
+            assertThat(distance.getDistance() < 0.00015);
 
         } catch (JsonProcessingException e) {
             e.printStackTrace();
