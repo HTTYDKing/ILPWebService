@@ -21,10 +21,29 @@ jobs:
       - name: Run tests
         run: mvn -B test
 
-      - name: Upload test reports (txt/xml)
+      - name: Debug - show where reports are
+        if: always()
+        run: |
+          echo "=== Report directories (surefire/failsafe) ==="
+          find . -maxdepth 6 -type d \( -name "surefire-reports" -o -name "failsafe-reports" \) -print || true
+          echo "=== Report files (txt/xml) ==="
+          find . -maxdepth 7 -type f \( -name "*.xml" -o -name "*.txt" \) \
+            | grep -E "surefire-reports|failsafe-reports" || true
+
+      - name: Upload Maven test log (txt)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: surefire-reports
-          path: target/surefire-reports/**
+          name: mvn-test-log
+          path: mvn-test.log
+          if-no-files-found: error
+
+      - name: Upload test reports (surefire + failsafe)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
           if-no-files-found: warn
