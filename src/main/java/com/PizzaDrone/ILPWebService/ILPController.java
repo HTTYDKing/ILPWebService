@@ -119,7 +119,7 @@ public class ILPController {
 
         ValidateOrder validateOrder = new ValidateOrder(body);
 
-        if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
+        if((validateOrder.getStatus() != OrderStatus.VALID)&& (validateOrder.getCode() != OrderValidationCode.NO_ERROR)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getResturantorder());
@@ -131,7 +131,7 @@ public class ILPController {
     public ResponseEntity<Object> getCalcDeliveryPathAsGeoJson(@RequestBody PizzaOrder body) {
         ValidateOrder validateOrder = new ValidateOrder(body);
 
-        if(!(validateOrder.getStatus() == OrderStatus.VALID)&& (validateOrder.getCode() == OrderValidationCode.NO_ERROR)){
+        if((validateOrder.getStatus() != OrderStatus.VALID)&& (validateOrder.getCode() != OrderValidationCode.NO_ERROR)){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         CalDeliveryPath DronePath = new CalDeliveryPath(validateOrder.getResturantorder());

@@ -1,0 +1,20 @@
+{
+  "orderNo": "681FBE91",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 2600,
+  "pizzasInOrder": [
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Vegan Delight",
+      "priceInPence": 1100
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "5130684162297637",
+    "creditCardExpiry": "05/25",
+    "cvv": "016"
+  }
+}

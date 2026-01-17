@@ -1,13 +1,19 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
+import com.PizzaDrone.ILPWebService.dataType.OrderStatus;
 import com.PizzaDrone.ILPWebService.dataType.PizzaOrder;
 import com.PizzaDrone.ILPWebService.dataType.Positions;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
+import java.io.InputStream;
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CalDeliveryPathTest {
     String Json = "{\n" +
@@ -30,8 +36,29 @@ public class CalDeliveryPathTest {
             "      \"cvv\": \"016\"\n" +
             "    }\n" +
             "  }";
+
     @Test
-    void TestPath() {
+    void TestPathOrder() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
+        try (InputStream is = getClass()
+                .getClassLoader()
+                .getResourceAsStream("valid_order.json")) {
+
+            if (is == null) {
+                throw new IllegalStateException("Test JSON file not found");
+            }
+
+            PizzaOrder order = mapper.readValue(is, PizzaOrder.class);
+            ValidateOrder validateOrder = new ValidateOrder(order);
+
+            assertEquals(OrderStatus.VALID, validateOrder.getStatus());
+        }
+
+    }
+
+    @Test
+    void TestPathWithinDistance() {
         try {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
@@ -53,6 +80,61 @@ public class CalDeliveryPathTest {
         }
 
     }
+
+    @Test
+    void TestPathFollowdistanceConstrainst() throws Exception{
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
+            ValidateOrder validateOrder = new ValidateOrder(regionRequest);
+            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getResturantorder());
+            LngLatPair Points = new LngLatPair();
+
+            for (int i = 0; i < (DronePathtest.getFlightPath().length - 1); i++) {
+                Points.setPos1(DronePathtest.getFlightPath()[i]);
+                Points.setPos2(DronePathtest.getFlightPath()[i + 1]);
+                PosDistance distance = new PosDistance(Points);
+                if ((Math.round(distance.getDistance() * 1e6) / 1e6) != 0.00015) {
+
+                    assertEquals(0.00015, distance.getDistance(),1e-6);
+                }
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    static final List<Double> ALLOWED_ANGLES = List.of(
+            0.0, 22.5, 45.0, 67.5, 90.0, 112.5, 135.0, 157.5,
+            180.0, 202.5, 225.0, 247.5, 270.0, 292.5, 315.0, 337.5
+    );
+
+    @Test
+    void TestPathFollowangleConstrainst() throws Exception{
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
+            ValidateOrder validateOrder = new ValidateOrder(regionRequest);
+            CalDeliveryPath DronePathtest = new CalDeliveryPath(validateOrder.getResturantorder());
+
+            for (int i = 0; i < (DronePathtest.getFlightPath().length - 1); i++) {
+
+                double dx = DronePathtest.getFlightPath()[i + 1].getLng() - DronePathtest.getFlightPath()[i].getLng();
+                double dy = DronePathtest.getFlightPath()[i + 1].getLat() - DronePathtest.getFlightPath()[i].getLat();
+                double bearing = (Math.toDegrees(Math.atan2(dy, dx)) + 360) % 360;
+
+
+                assertTrue(ALLOWED_ANGLES.stream().anyMatch(a -> Math.abs(a - bearing) < 1e-6));
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Test
     void TestPathGeoJson() {
         try {

@@ -1,49 +1,41 @@
 package com.PizzaDrone.ILPWebService;
 
 import com.PizzaDrone.ILPWebService.dataType.OrderStatus;
+import com.PizzaDrone.ILPWebService.dataType.OrderValidation;
 import com.PizzaDrone.ILPWebService.dataType.OrderValidationCode;
 import com.PizzaDrone.ILPWebService.dataType.PizzaOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
+import java.io.InputStream;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ValidateOrderTest {
     @Test
-    void TestValidOrder(){
-        String Json = "{\n" +
-                "    \"orderNo\": \"681FBE91\",\n" +
-                "    \"orderDate\": \"2025-01-15\",\n" +
-                "    \"priceTotalInPence\": 2600,\n" +
-                "    \"pizzasInOrder\": [\n" +
-                "      {\n" +
-                "        \"name\": \"R2: Meat Lover\",\n" +
-                "        \"priceInPence\": 1400\n" +
-                "      },\n" +
-                "      {\n" +
-                "        \"name\": \"R2: Vegan Delight\",\n" +
-                "        \"priceInPence\": 1100\n" +
-                "      }\n" +
-                "    ],\n" +
-                "    \"creditCardInformation\": {\n" +
-                "      \"creditCardNumber\": \"5130684162297637\",\n" +
-                "      \"creditCardExpiry\": \"05/25\",\n" +
-                "      \"cvv\": \"016\"\n" +
-                "    }\n" +
-                "  }";
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
-            ValidateOrder validateOrder = new ValidateOrder(regionRequest);
-            assertThat(validateOrder.getStatus() == OrderStatus.VALID);
+    void TestValidOrder() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
+        try (InputStream is = getClass()
+                .getClassLoader()
+                .getResourceAsStream("valid_order.json")) {
+
+            if (is == null) {
+                throw new IllegalStateException("Test JSON file not found");
+            }
+
+            PizzaOrder order = mapper.readValue(is, PizzaOrder.class);
+            ValidateOrder validateOrder = new ValidateOrder(order);
+
+            assertEquals(OrderStatus.VALID, validateOrder.getStatus());
         }
     }
+
     @Test
-    void TestInvalidCardNumber(){
+    void TestInvalidCardNumber() throws Exception {
         String Json = "{\n" +
                 "    \"orderNo\": \"1D9EAA24\",\n" +
                 "    \"orderDate\": \"2025-01-15\",\n" +
@@ -68,11 +60,10 @@ public class ValidateOrderTest {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
             ValidateOrder validateOrder = new ValidateOrder(regionRequest);
-            assertThat((validateOrder.getStatus() == OrderStatus.INVALID)&&
-                    (validateOrder.getCode() == OrderValidationCode.CARD_NUMBER_INVALID));
-
+            assertEquals(OrderStatus.INVALID, validateOrder.getStatus());
+            assertEquals(OrderValidationCode.CARD_NUMBER_INVALID, validateOrder.getCode());
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
     @Test
