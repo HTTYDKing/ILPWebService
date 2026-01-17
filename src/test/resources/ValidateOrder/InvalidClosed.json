@@ -1,0 +1,16 @@
+{
+  "orderNo": "681FBE91",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 1100,
+  "pizzasInOrder": [
+    {
+      "name": "R1: Margarita",
+      "priceInPence": 1000
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "4415432906022740",
+    "creditCardExpiry": "11/25",
+    "cvv": "350"
+  }
+}

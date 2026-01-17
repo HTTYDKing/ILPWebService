@@ -1,0 +1,24 @@
+{
+  "orderNo": "27FDB3C6",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 3800,
+  "pizzasInOrder": [
+    {
+      "name": "R4: Proper Pizza",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R4: Pineapple & Ham & Cheese",
+      "priceInPence": 900
+    },
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "4693216294063926",
+    "creditCardExpiry": "05/25",
+    "cvv": "551"
+  }
+}

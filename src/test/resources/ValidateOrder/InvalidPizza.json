@@ -1,0 +1,24 @@
+{
+  "orderNo": "607D5EB6",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 498705480,
+  "pizzasInOrder": [
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Vegan Delight",
+      "priceInPence": 1100
+    },
+    {
+      "name": "Pizza-Surprise",
+      "priceInPence": 498702880
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "4494248618658058",
+    "creditCardExpiry": "03/26",
+    "cvv": "518"
+  }
+}

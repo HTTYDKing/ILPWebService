@@ -1,5 +1,8 @@
-package com.PizzaDrone.ILPWebService;
+package com.PizzaDrone.ILPWebService.Integration_testing;
 
+import com.PizzaDrone.ILPWebService.CalDeliveryPath;
+import com.PizzaDrone.ILPWebService.PosDistance;
+import com.PizzaDrone.ILPWebService.ValidateOrder;
 import com.PizzaDrone.ILPWebService.dataType.LngLatPair;
 import com.PizzaDrone.ILPWebService.dataType.OrderStatus;
 import com.PizzaDrone.ILPWebService.dataType.PizzaOrder;
@@ -43,7 +46,7 @@ public class CalDeliveryPathTest {
 
         try (InputStream is = getClass()
                 .getClassLoader()
-                .getResourceAsStream("valid_order.json")) {
+                .getResourceAsStream("ValidateOrder/valid_order.json")) {
 
             if (is == null) {
                 throw new IllegalStateException("Test JSON file not found");

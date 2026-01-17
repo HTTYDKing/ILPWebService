@@ -1,0 +1,20 @@
+{
+  "orderNo": "1005250A",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 2745,
+  "pizzasInOrder": [
+    {
+      "name": "R4: Proper Pizza",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R4: Pineapple & Ham & Cheese",
+      "priceInPence": 900
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "5461978840455883",
+    "creditCardExpiry": "11/25",
+    "cvv": "311"
+  }
+}

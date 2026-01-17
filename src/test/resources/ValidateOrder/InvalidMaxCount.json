@@ -1,0 +1,36 @@
+{
+  "orderNo": "084E2D86",
+  "orderDate": "2025-01-15",
+  "priceTotalInPence": 8200,
+  "pizzasInOrder": [
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Vegan Delight",
+      "priceInPence": 1100
+    },
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    },
+    {
+      "name": "R2: Meat Lover",
+      "priceInPence": 1400
+    }
+  ],
+  "creditCardInformation": {
+    "creditCardNumber": "5446766925177799",
+    "creditCardExpiry": "04/25",
+    "cvv": "699"
+  }
+}
