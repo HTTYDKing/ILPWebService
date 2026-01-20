@@ -85,7 +85,7 @@ public class CalDeliveryPathTest {
     }
 
     @Test
-    void TestPathFollowdistanceConstrainst() throws Exception{
+    void TestPathFollowdistanceConstraints() throws Exception{
         try {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
@@ -115,7 +115,7 @@ public class CalDeliveryPathTest {
     );
 
     @Test
-    void TestPathFollowangleConstrainst() throws Exception{
+    void TestPathFollowableConstraints() throws Exception{
         try {
             ObjectMapper mapper = new ObjectMapper();
             PizzaOrder regionRequest = mapper.readValue(Json, PizzaOrder.class);
@@ -150,7 +150,6 @@ public class CalDeliveryPathTest {
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
     }
 
 }

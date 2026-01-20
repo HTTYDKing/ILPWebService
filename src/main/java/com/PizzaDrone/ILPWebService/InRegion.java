@@ -53,8 +53,20 @@ public class InRegion {
             double crossProduct = x0 * y1 - x1 * y0;
 
             if (Math.abs(crossProduct) <= 1e-9) {
-                this.inRegion = true;
-                return true;
+
+
+                double minLat = Math.min(vertices[i].getLat(), vertices[i + 1].getLat()) - 1e-9;
+                double maxLat = Math.max(vertices[i].getLat(), vertices[i + 1].getLat()) + 1e-9;
+                double minLng = Math.min(vertices[i].getLng(), vertices[i + 1].getLng()) - 1e-9;
+                double maxLng = Math.max(vertices[i].getLng(), vertices[i + 1].getLng()) + 1e-9;
+
+                if (point.getLat() >= minLat && point.getLat() <= maxLat &&
+                        point.getLng() >= minLng && point.getLng() <= maxLng) {
+
+                    this.inRegion = true;
+                    return true;
+                }
+
             }
 
         }

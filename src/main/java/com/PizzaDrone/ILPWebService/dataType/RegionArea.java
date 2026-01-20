@@ -16,6 +16,10 @@ public class RegionArea {
         return vertices;
     }
 
+    public void setVertices(Positions[] vertices) {
+        this.vertices = vertices;
+    }
+
     public boolean NotValid(){
         boolean notValidverticies = false;
         boolean notenclosed = false;

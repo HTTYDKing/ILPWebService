@@ -8,7 +8,7 @@ public class NextPosition {
     private LngLatAng start;
     private Positions nextposition;
 
-    NextPosition(LngLatAng startpos) {
+    public NextPosition(LngLatAng startpos) {
 
         double newlat, newlng;
         Positions nextpositions = new Positions();
